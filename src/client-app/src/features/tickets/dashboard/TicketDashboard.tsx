@@ -13,9 +13,10 @@ interface Props {
   editMode: boolean;
   openForm: (id?: string) => void;
   closeForm: () => void;
+  createEditTicket: (ticket: Ticket) => void;
 }
 
-export default function TicketDashboard({ tickets, selectedTicket, selectTicket, cancelSelectTicket, editMode, openForm, closeForm }: Props) {
+export default function TicketDashboard({ tickets, selectedTicket, selectTicket, cancelSelectTicket, editMode, openForm, closeForm, createEditTicket }: Props) {
   return (
     <>
       <div className="d-flex justify-content-between align-items-center">
@@ -34,7 +35,8 @@ export default function TicketDashboard({ tickets, selectedTicket, selectTicket,
       {editMode &&
         <TicketForm
           ticket={selectedTicket}
-          closeForm={closeForm} />}
+          closeForm={closeForm}
+          createEditTicket={createEditTicket} />}
     </>
   );
 }

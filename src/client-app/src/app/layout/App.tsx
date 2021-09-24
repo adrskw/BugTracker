@@ -6,6 +6,7 @@ import { Ticket } from "../models/ticket";
 import TopNavbar from "./TopNavbar";
 import Sidebar from "./Sidebar";
 import TicketDashboard from "../../features/tickets/dashboard/TicketDashboard";
+import { v4 as uuid } from 'uuid';
 
 function App() {
   const [tickets, setTickets] = useState<Ticket[]>([]);
@@ -29,6 +30,15 @@ function App() {
     setEditTicketMode(false);
   }
 
+  function handleCreateEditTicket(ticket: Ticket) {
+    ticket.id
+      ? setTickets([...tickets.filter(x => x.id !== ticket.id), ticket])
+      : setTickets([...tickets, { ...ticket, id: uuid() }]);
+
+    setSelectedTicket(ticket);
+    setEditTicketMode(false);
+  }
+
   useEffect(() => {
     axios.get<Ticket[]>("http://localhost:5000/api/tickets").then((response) => {
       setTickets(response.data);
@@ -49,7 +59,8 @@ function App() {
               cancelSelectTicket={handleCancelSelectedTicket}
               editMode={editTicketMode}
               openForm={handleTicketFormOpen}
-              closeForm={handleTicketFormClose} />
+              closeForm={handleTicketFormClose}
+              createEditTicket={handleCreateEditTicket} />
           </div>
         </Row>
       </Container>

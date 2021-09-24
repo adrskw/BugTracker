@@ -5,9 +5,12 @@ import { Ticket } from '../../../app/models/ticket';
 interface Props {
     ticket: Ticket | undefined;
     closeForm: () => void;
+    createEditTicket: (ticket: Ticket) => void;
 }
 
-export default function TicketForm({ ticket: selectedTicket, closeForm }: Props) {
+export default function TicketForm({ ticket: selectedTicket, closeForm, createEditTicket }: Props) {
+    console.log(selectedTicket)
+
     const initialState = selectedTicket ?? {
         id: '',
         title: '',
@@ -16,14 +19,15 @@ export default function TicketForm({ ticket: selectedTicket, closeForm }: Props)
         assignee: '',
         priority: 0,
         status: 0,
-        creationDate: ''
+        creationDate: new Date().toUTCString()
     };
 
     const [ticket, setTicket] = useState(initialState);
 
     function handleSubmit(event: FormEvent<HTMLFormElement>) {
         event.preventDefault();
-        console.log(ticket);
+        createEditTicket(ticket);
+        console.log(ticket)
     }
 
     function handleInputChange(event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
