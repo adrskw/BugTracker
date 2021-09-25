@@ -7,9 +7,10 @@ interface Props {
   ticket: Ticket;
   cancelSelectTicket: () => void;
   openForm: (id: string) => void;
+  handleToggleConfirmDeleteModal: () => void;
 }
 
-export default function TicketDetails({ ticket, cancelSelectTicket, openForm }: Props) {
+export default function TicketDetails({ ticket, cancelSelectTicket, openForm, handleToggleConfirmDeleteModal }: Props) {
   return (
     <Offcanvas show={true} onHide={cancelSelectTicket} placement="end" className="largeOffcanvas">
       <Offcanvas.Header closeButton>
@@ -19,7 +20,7 @@ export default function TicketDetails({ ticket, cancelSelectTicket, openForm }: 
             <Button variant="outline-secondary" onClick={() => openForm(ticket.id)}>
               <FaRegEdit className="title-icon" />
             </Button>
-            <Button variant="outline-secondary">
+            <Button variant="outline-secondary" onClick={handleToggleConfirmDeleteModal}>
               <FaRegTrashAlt className="title-icon" />
             </Button>
           </ButtonGroup>

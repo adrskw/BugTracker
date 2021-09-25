@@ -12,6 +12,7 @@ function App() {
   const [tickets, setTickets] = useState<Ticket[]>([]);
   const [selectedTicket, setSelectedTicket] = useState<Ticket | undefined>(undefined);
   const [editTicketMode, setEditTicketMode] = useState(false);
+  const [isConfirmDeleteModalDisplayed, setIsConfirmDeleteModalDisplayed] = useState(false);
 
   function handleSelectTicket(id: string) {
     setSelectedTicket(tickets.find(x => x.id === id));
@@ -39,6 +40,7 @@ function App() {
     setEditTicketMode(false);
   }
 
+  const handleToggleConfirmDeleteModal = () => setIsConfirmDeleteModalDisplayed(state => !state);
   useEffect(() => {
     axios.get<Ticket[]>("http://localhost:5000/api/tickets").then((response) => {
       setTickets(response.data);
@@ -60,7 +62,9 @@ function App() {
               editMode={editTicketMode}
               openForm={handleTicketFormOpen}
               closeForm={handleTicketFormClose}
-              createEditTicket={handleCreateEditTicket} />
+              createEditTicket={handleCreateEditTicket}
+              isConfirmDeleteModalDisplayed={isConfirmDeleteModalDisplayed}
+              handleToggleConfirmDeleteModal={handleToggleConfirmDeleteModal} />
           </div>
         </Row>
       </Container>
