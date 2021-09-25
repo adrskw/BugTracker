@@ -5,9 +5,10 @@ import { Ticket } from '../../../app/models/ticket';
 interface Props {
     ticket: Ticket;
     handleToggleConfirmDeleteModal: () => void;
+    deleteTicket: (id: string) => void;
 }
 
-export default function ConfirmDeleteModal({ ticket, handleToggleConfirmDeleteModal }: Props) {
+export default function ConfirmDeleteModal({ ticket, handleToggleConfirmDeleteModal, deleteTicket }: Props) {
     return (
         <Modal centered show="true" onHide={handleToggleConfirmDeleteModal}>
             <Modal.Header closeButton>
@@ -20,7 +21,7 @@ export default function ConfirmDeleteModal({ ticket, handleToggleConfirmDeleteMo
             </Modal.Body>
             <Modal.Footer>
                 <Button variant="outline-secondary" onClick={handleToggleConfirmDeleteModal}>No</Button>
-                <Button variant="outline-danger">Yes</Button>
+                <Button variant="outline-danger" onClick={() => deleteTicket(ticket.id)}>Yes</Button>
             </Modal.Footer>
         </Modal>
     );

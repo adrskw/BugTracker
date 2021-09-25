@@ -17,11 +17,12 @@ interface Props {
   createEditTicket: (ticket: Ticket) => void;
   isConfirmDeleteModalDisplayed: boolean;
   handleToggleConfirmDeleteModal: () => void;
+  deleteTicket: (id: string) => void;
 }
 
 export default function TicketDashboard({ tickets, selectedTicket, selectTicket, cancelSelectTicket,
   editMode, openForm, closeForm, createEditTicket,
-  isConfirmDeleteModalDisplayed, handleToggleConfirmDeleteModal }: Props) {
+  isConfirmDeleteModalDisplayed, handleToggleConfirmDeleteModal, deleteTicket }: Props) {
 
   return (
     <>
@@ -49,7 +50,8 @@ export default function TicketDashboard({ tickets, selectedTicket, selectTicket,
       {selectedTicket && isConfirmDeleteModalDisplayed &&
         <ConfirmDeleteModal
           ticket={selectedTicket}
-          handleToggleConfirmDeleteModal={handleToggleConfirmDeleteModal} />}
+          handleToggleConfirmDeleteModal={handleToggleConfirmDeleteModal}
+          deleteTicket={deleteTicket} />}
     </>
   );
 }
