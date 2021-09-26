@@ -21,7 +21,7 @@ export default function TicketForm({ ticket: selectedTicket, closeForm, createEd
     assignee: '',
     priority: 0,
     status: 0,
-    creationDate: new Date().toUTCString()
+    creationDate: new Date().toISOString() // TODO: Handle creationDate on the server side
   };
 
   const [ticket, setTicket] = useState(initialState);
