@@ -34,20 +34,32 @@ function App() {
   }
 
   function handleCreateEditTicket(ticket: Ticket) {
-    ticket.id
-      ? setTickets([...tickets.filter(x => x.id !== ticket.id), ticket])
-      : setTickets([...tickets, { ...ticket, id: uuid() }]);
 
-    setSelectedTicket(ticket);
-    setEditTicketMode(false);
+    if (ticket.id) {
+      agent.Tickets.update(ticket).then(() => {
+        setTickets([...tickets.filter(x => x.id !== ticket.id), ticket]);
+        setSelectedTicket(ticket);
+        setEditTicketMode(false);
+      })
+    }
+    else {
+      ticket.id = uuid();
+      agent.Tickets.create(ticket).then(() => {
+        setTickets([...tickets, ticket]);
+        setSelectedTicket(ticket);
+        setEditTicketMode(false);
+      })
+    }
   }
 
   const handleToggleConfirmDeleteModal = () => setIsConfirmDeleteModalDisplayed(state => !state);
 
   function handleDeleteTicket(id: string) {
-    setTickets([...tickets.filter(x => x.id !== id)]);
-    handleToggleConfirmDeleteModal();
-    handleCancelSelectedTicket();
+    agent.Tickets.delete(id).then(() => {
+      setTickets([...tickets.filter(x => x.id !== id)]);
+      handleToggleConfirmDeleteModal();
+      handleCancelSelectedTicket();
+    })
   }
 
   useEffect(() => {

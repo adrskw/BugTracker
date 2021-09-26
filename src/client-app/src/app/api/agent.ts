@@ -13,7 +13,11 @@ const requests = {
 }
 
 const Tickets = {
-  list: () => requests.get<Ticket[]>("/tickets")
+  list: () => requests.get<Ticket[]>('/tickets'),
+  details: (id: string) => requests.get<Ticket>(`/tickets/${id}`),
+  create: (ticket: Ticket) => requests.post<void>('/tickets', ticket),
+  update: (ticket: Ticket) => requests.put<void>(`/tickets/${ticket.id}`, ticket),
+  delete: (id: string) => requests.delete<void>(`/tickets/${id}`)
 }
 
 const agent = {
