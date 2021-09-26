@@ -7,12 +7,14 @@ import Sidebar from "./Sidebar";
 import TicketDashboard from "../../features/tickets/dashboard/TicketDashboard";
 import { v4 as uuid } from 'uuid';
 import agent from "../api/agent";
+import LoadingComponent from "./loading/LoadingComponent";
 
 function App() {
   const [tickets, setTickets] = useState<Ticket[]>([]);
   const [selectedTicket, setSelectedTicket] = useState<Ticket | undefined>(undefined);
   const [editTicketMode, setEditTicketMode] = useState(false);
   const [isConfirmDeleteModalDisplayed, setIsConfirmDeleteModalDisplayed] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   function handleSelectTicket(id: string) {
     setSelectedTicket(tickets.find(x => x.id === id));
@@ -51,8 +53,11 @@ function App() {
   useEffect(() => {
     agent.Tickets.list().then(response => {
       setTickets(response);
+      setLoading(false);
     });
   }, []);
+
+  if (loading) return <LoadingComponent />
 
   return (
     <>
