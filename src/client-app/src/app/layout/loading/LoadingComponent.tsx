@@ -10,7 +10,8 @@ export default function LoadingComponent({ text = 'Loading...' }: Props) {
     <div className="d-flex flex-column min-vh-100 justify-content-center align-items-center text-center">
       <Spinner
         animation="border"
-        variant="primary" />
+        variant="primary"
+        className="mainLoadingSpinner" />
       {text}
     </div>
   )

@@ -13,12 +13,6 @@ code {
     monospace;
 }
 
-.nav-icon {
-  width: 16px;
-  height: 16px;
-  vertical-align: text-bottom;
-}
-
 /*
  * Sidebar
  */
@@ -164,4 +158,19 @@ code {
   .largeOffcanvas > .offcanvas-body > dl > dt {
     text-align: left !important;
   }
+}
+
+/*
+ * Other styles
+ */
+ 
+.nav-icon {
+  width: 16px;
+  height: 16px;
+  vertical-align: text-bottom;
+}
+
+.mainLoadingSpinner {
+  width: 3rem;
+  height: 3rem;
 }
