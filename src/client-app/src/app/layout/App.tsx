@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import "bootswatch/dist/zephyr/bootstrap.min.css";
-import axios from "axios";
 import { Container, Row } from "react-bootstrap";
 import { Ticket } from "../models/ticket";
 import TopNavbar from "./TopNavbar";
 import Sidebar from "./Sidebar";
 import TicketDashboard from "../../features/tickets/dashboard/TicketDashboard";
 import { v4 as uuid } from 'uuid';
+import agent from "../api/agent";
 
 function App() {
   const [tickets, setTickets] = useState<Ticket[]>([]);
@@ -49,8 +49,8 @@ function App() {
   }
 
   useEffect(() => {
-    axios.get<Ticket[]>("http://localhost:5000/api/tickets").then((response) => {
-      setTickets(response.data);
+    agent.Tickets.list().then(response => {
+      setTickets(response);
     });
   }, []);
 
