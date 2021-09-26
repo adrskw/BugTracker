@@ -1,14 +1,16 @@
 import React, { ChangeEvent, FormEvent, useState } from 'react';
 import { Button, Col, FloatingLabel, Form, Offcanvas, Row } from 'react-bootstrap';
+import LoadingButtonContentComponent from '../../../app/layout/loading/LoadingButtonContentComponent';
 import { Ticket } from '../../../app/models/ticket';
 
 interface Props {
   ticket: Ticket | undefined;
   closeForm: () => void;
   createEditTicket: (ticket: Ticket) => void;
+  isProcessingRequest: boolean;
 }
 
-export default function TicketForm({ ticket: selectedTicket, closeForm, createEditTicket }: Props) {
+export default function TicketForm({ ticket: selectedTicket, closeForm, createEditTicket, isProcessingRequest }: Props) {
   console.log(selectedTicket)
 
   const initialState = selectedTicket ?? {
@@ -93,8 +95,8 @@ export default function TicketForm({ ticket: selectedTicket, closeForm, createEd
               </FloatingLabel>
             </Col>
             <Col xs={12}>
-              <Button variant="primary" type="submit">
-                Submit
+              <Button variant="primary" type="submit" disabled={isProcessingRequest}>
+                {(isProcessingRequest) ? <LoadingButtonContentComponent /> : 'Submit'}
               </Button>
             </Col>
           </Row>

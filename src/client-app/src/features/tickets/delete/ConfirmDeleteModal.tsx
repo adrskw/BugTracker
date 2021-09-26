@@ -1,14 +1,16 @@
 import React from 'react';
 import { Button, Modal } from 'react-bootstrap';
+import LoadingButtonContentComponent from '../../../app/layout/loading/LoadingButtonContentComponent';
 import { Ticket } from '../../../app/models/ticket';
 
 interface Props {
   ticket: Ticket;
   handleToggleConfirmDeleteModal: () => void;
   deleteTicket: (id: string) => void;
+  isProcessingRequest: boolean;
 }
 
-export default function ConfirmDeleteModal({ ticket, handleToggleConfirmDeleteModal, deleteTicket }: Props) {
+export default function ConfirmDeleteModal({ ticket, handleToggleConfirmDeleteModal, deleteTicket, isProcessingRequest }: Props) {
   return (
     <Modal centered show="true" onHide={handleToggleConfirmDeleteModal}>
       <Modal.Header closeButton>
@@ -21,7 +23,11 @@ export default function ConfirmDeleteModal({ ticket, handleToggleConfirmDeleteMo
       </Modal.Body>
       <Modal.Footer>
         <Button variant="outline-secondary" onClick={handleToggleConfirmDeleteModal}>No</Button>
-        <Button variant="outline-danger" onClick={() => deleteTicket(ticket.id)}>Yes</Button>
+        <Button variant="outline-danger" onClick={() => deleteTicket(ticket.id)}>
+          {(isProcessingRequest)
+            ? <LoadingButtonContentComponent />
+            : 'Yes'}
+        </Button>
       </Modal.Footer>
     </Modal>
   );

@@ -15,6 +15,7 @@ function App() {
   const [editTicketMode, setEditTicketMode] = useState(false);
   const [isConfirmDeleteModalDisplayed, setIsConfirmDeleteModalDisplayed] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [isProcessingRequest, setIsProcessingRequest] = useState(false);
 
   function handleSelectTicket(id: string) {
     setSelectedTicket(tickets.find(x => x.id === id));
@@ -34,12 +35,14 @@ function App() {
   }
 
   function handleCreateEditTicket(ticket: Ticket) {
+    setIsProcessingRequest(true);
 
     if (ticket.id) {
       agent.Tickets.update(ticket).then(() => {
         setTickets([...tickets.filter(x => x.id !== ticket.id), ticket]);
         setSelectedTicket(ticket);
         setEditTicketMode(false);
+        setIsProcessingRequest(false);
       })
     }
     else {
@@ -48,6 +51,7 @@ function App() {
         setTickets([...tickets, ticket]);
         setSelectedTicket(ticket);
         setEditTicketMode(false);
+        setIsProcessingRequest(false);
       })
     }
   }
@@ -55,10 +59,12 @@ function App() {
   const handleToggleConfirmDeleteModal = () => setIsConfirmDeleteModalDisplayed(state => !state);
 
   function handleDeleteTicket(id: string) {
+    setIsProcessingRequest(true);
     agent.Tickets.delete(id).then(() => {
       setTickets([...tickets.filter(x => x.id !== id)]);
       handleToggleConfirmDeleteModal();
       handleCancelSelectedTicket();
+      setIsProcessingRequest(false);
     })
   }
 
@@ -89,7 +95,8 @@ function App() {
               createEditTicket={handleCreateEditTicket}
               isConfirmDeleteModalDisplayed={isConfirmDeleteModalDisplayed}
               handleToggleConfirmDeleteModal={handleToggleConfirmDeleteModal}
-              deleteTicket={handleDeleteTicket} />
+              deleteTicket={handleDeleteTicket}
+              isProcessingRequest={isProcessingRequest} />
           </div>
         </Row>
       </Container>
