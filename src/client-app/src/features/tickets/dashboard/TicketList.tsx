@@ -1,13 +1,11 @@
 import React from 'react';
 import { ListGroup } from 'react-bootstrap';
-import { Ticket } from '../../../app/models/ticket';
+import { useStore } from '../../../app/stores/store';
 
-interface Props {
-  tickets: Ticket[];
-  selectTicket: (id: string) => void;
-}
+export default function TicketList() {
+  const { ticketStore } = useStore();
+  const { tickets, selectTicket } = ticketStore;
 
-export default function TicketList({ tickets, selectTicket }: Props) {
   return (
     <ListGroup >
       {tickets.map(ticket => (

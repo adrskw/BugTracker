@@ -1,17 +1,13 @@
+import { observer } from 'mobx-react-lite';
 import React, { ChangeEvent, FormEvent, useState } from 'react';
 import { Button, Col, FloatingLabel, Form, Offcanvas, Row } from 'react-bootstrap';
 import LoadingButtonContentComponent from '../../../app/layout/loading/LoadingButtonContentComponent';
-import { Ticket } from '../../../app/models/ticket';
+import { useStore } from '../../../app/stores/store';
 
-interface Props {
-  ticket: Ticket | undefined;
-  closeForm: () => void;
-  createEditTicket: (ticket: Ticket) => void;
-  isProcessingRequest: boolean;
-}
-
-export default function TicketForm({ ticket: selectedTicket, closeForm, createEditTicket, isProcessingRequest }: Props) {
-  console.log(selectedTicket)
+export default observer(function TicketForm() {
+  const { ticketStore } = useStore();
+  const { selectedTicket, closeTicketForm,
+    createTicket, updateTicket, isProcessingRequest } = ticketStore;
 
   const initialState = selectedTicket ?? {
     id: '',
@@ -28,8 +24,7 @@ export default function TicketForm({ ticket: selectedTicket, closeForm, createEd
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    createEditTicket(ticket);
-    console.log(ticket)
+    ticket.id ? updateTicket(ticket) : createTicket(ticket);
   }
 
   function handleInputChange(event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
@@ -44,7 +39,7 @@ export default function TicketForm({ ticket: selectedTicket, closeForm, createEd
     setTicket({ ...ticket, [name]: value });
   }
   return (
-    <Offcanvas show={true} onHide={closeForm} placement="end" className="largeOffcanvas">
+    <Offcanvas show={true} onHide={closeTicketForm} placement="end" className="largeOffcanvas">
       <Offcanvas.Header closeButton>
         <Offcanvas.Title>
           {selectedTicket ? "Edit Ticket" : "Create Ticket"}
@@ -104,4 +99,4 @@ export default function TicketForm({ ticket: selectedTicket, closeForm, createEd
       </Offcanvas.Body>
     </Offcanvas>
   );
-}
+});

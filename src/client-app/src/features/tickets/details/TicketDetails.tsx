@@ -1,26 +1,26 @@
+import { observer } from 'mobx-react-lite';
 import React from 'react';
 import { Button, ButtonGroup, Col, Offcanvas, Row } from 'react-bootstrap';
 import { FaRegEdit, FaRegTrashAlt } from 'react-icons/fa';
-import { Ticket } from '../../../app/models/ticket';
+import { useStore } from '../../../app/stores/store';
 
-interface Props {
-  ticket: Ticket;
-  cancelSelectTicket: () => void;
-  openForm: (id: string) => void;
-  handleToggleConfirmDeleteModal: () => void;
-}
+export default observer(function TicketDetails() {
+  const { ticketStore } = useStore();
+  const { selectedTicket: ticket, openTicketForm,
+    toggleIsConfirmDeleteModalDisplayed, cancelSelectedTicket } = ticketStore;
 
-export default function TicketDetails({ ticket, cancelSelectTicket, openForm, handleToggleConfirmDeleteModal }: Props) {
+  if (!ticket) return <></>;
+
   return (
-    <Offcanvas show={true} onHide={cancelSelectTicket} placement="end" className="largeOffcanvas">
+    <Offcanvas show={true} onHide={cancelSelectedTicket} placement="end" className="largeOffcanvas">
       <Offcanvas.Header closeButton>
         <Offcanvas.Title>
           {ticket.title}
           <ButtonGroup className="ms-2">
-            <Button variant="outline-secondary" onClick={() => openForm(ticket.id)}>
+            <Button variant="outline-secondary" onClick={() => openTicketForm(ticket.id)}>
               <FaRegEdit className="title-icon" />
             </Button>
-            <Button variant="outline-secondary" onClick={handleToggleConfirmDeleteModal}>
+            <Button variant="outline-secondary" onClick={toggleIsConfirmDeleteModalDisplayed}>
               <FaRegTrashAlt className="title-icon" />
             </Button>
           </ButtonGroup>
@@ -53,4 +53,4 @@ export default function TicketDetails({ ticket, cancelSelectTicket, openForm, ha
       </Offcanvas.Body>
     </Offcanvas>
   );
-}
+});
