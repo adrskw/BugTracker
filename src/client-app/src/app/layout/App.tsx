@@ -17,6 +17,7 @@ function App() {
           <Sidebar />
           <div className="ms-sm-auto col-sm-9 col-lg-10 px-4 py-2">
             <Route exact path="/" component={HomePage} />
+            <Route exact path="/tickets" component={TicketDashboard} />
           </div>
         </Row>
       </Container>
