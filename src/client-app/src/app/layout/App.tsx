@@ -8,6 +8,7 @@ import { observer } from "mobx-react-lite";
 import HomePage from "../../features/home/HomePage";
 import { Route, Switch } from "react-router-dom";
 import TicketDetails from "../../features/tickets/details/TicketDetails";
+import ConfirmDeleteModal from "../../features/tickets/delete/ConfirmDeleteModal";
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
             <Route exact path="/" component={HomePage} />
             <Route exact path="/tickets" component={TicketDashboard} />
               <Route exact path={["/tickets/:id", "/tickets/delete/:id"]} component={TicketDetails} />
+            <Route exact path="/tickets/delete/:id" component={ConfirmDeleteModal} />
           </div>
         </Row>
       </Container>
