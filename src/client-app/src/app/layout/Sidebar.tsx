@@ -18,7 +18,9 @@ export default function Sidebar() {
             <Nav.Link href="#"><FaProjectDiagram className="nav-icon" />Projects</Nav.Link>
           </Nav.Item>
           <Nav.Item>
-            <Nav.Link href="#"><FaTasks className="nav-icon" />Tickets</Nav.Link>
+            <Nav.Link as={NavLink} to="/tickets">
+              <FaTasks className="nav-icon" />Tickets
+            </Nav.Link>
             {/* <Nav className="flex-column sidebar-submenu">
               <Nav.Link href="#"><FaAngleRight className="nav-icon" />all</Nav.Link>
               <Nav.Link href="#"><FaAngleRight className="nav-icon" />open</Nav.Link>
