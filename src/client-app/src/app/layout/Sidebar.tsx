@@ -1,6 +1,7 @@
 import React from "react";
 import { Nav, Navbar } from "react-bootstrap";
-import { FaAngleRight, FaProjectDiagram, FaTasks } from "react-icons/fa";
+import { FaAngleRight, FaHome, FaProjectDiagram, FaTasks } from "react-icons/fa";
+import { NavLink } from "react-router-dom";
 
 export default function Sidebar() {
   return (
@@ -8,6 +9,11 @@ export default function Sidebar() {
       <Navbar.Toggle aria-controls="responsive-navbar-nav" className="mb-1">MENU</Navbar.Toggle>
       <Navbar.Collapse id="responsive-navbar-nav">
         <Nav className="flex-column flex-nowrap">
+          <Nav.Item>
+            <Nav.Link as={NavLink} to="/" exact>
+              <FaHome className="nav-icon" />Home
+            </Nav.Link>
+          </Nav.Item>
           <Nav.Item>
             <Nav.Link href="#"><FaProjectDiagram className="nav-icon" />Projects</Nav.Link>
           </Nav.Item>
