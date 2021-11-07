@@ -123,39 +123,31 @@ code {
 }
 
 /*
- * Large Offcanvas
+ * ticket-view-container
  */
 
-.largeOffcanvas {
-  width: 80% !important;
-}
-
-.largeOffcanvas > .offcanvas-body > dl dt {
+.ticket-view-container > dl dt {
   text-transform: uppercase !important;
   text-align: right !important;
   font-weight: 500 !important;
 }
 
-.largeOffcanvas > .offcanvas-body > dl dd {
+.ticket-view-container > dl dd {
   margin-bottom: .25rem;
 }
 
-.largeOffcanvas .title-icon {
+.ticket-view-container .title-icon {
   width: 18px;
   height: 18px;
   vertical-align: text-top;
 }
 
-.largeOffcanvas form textarea {
+.ticket-view-container form textarea {
   height: 150px !important;
 }
 
 @media (max-width: 768px) {
-  .largeOffcanvas {
-    width: 90% !important;
-  }
-
-  .largeOffcanvas > .offcanvas-body > dl > dt {
+  .ticket-view-container > dl > dt {
     text-align: left !important;
   }
 }

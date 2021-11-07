@@ -64,6 +64,28 @@ export default class TicketStore {
     }
   }
 
+  loadTicket = async (id: string) => {
+    let ticket = this.getTicketFromMemory(id);
+
+    if (ticket) {
+      this.selectedTicket = ticket;
+    }
+    else {
+      this.setIsLoading(true);
+
+      try {
+        ticket = await agent.Tickets.details(id);
+        this.selectedTicket = ticket;
+      } catch (error) {
+        console.log(error);
+      } finally {
+        this.setIsLoading(false);
+      }
+    }
+
+    return ticket;
+  }
+
   createTicket = async (ticket: Ticket) => {
     this.setIsProcessingRequest(true);
     ticket.id = uuid();
@@ -117,5 +139,9 @@ export default class TicketStore {
     } finally {
       this.setIsProcessingRequest(false);
     }
+  }
+
+  private getTicketFromMemory = (id: string) => {
+    return this.ticketRegistry.get(id);
   }
 }

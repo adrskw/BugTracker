@@ -1,3 +1,4 @@
+import { observer } from 'mobx-react-lite';
 import React from 'react';
 import { ListGroup } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
@@ -7,7 +8,7 @@ interface Props {
   ticket: Ticket
 }
 
-export default function TicketListItem({ ticket }: Props) {
+export default observer(function TicketListItem({ ticket }: Props) {
   return (
     <ListGroup.Item action
       as={Link}
@@ -24,4 +25,4 @@ export default function TicketListItem({ ticket }: Props) {
       </small>
     </ListGroup.Item>
   );
-}
+})
