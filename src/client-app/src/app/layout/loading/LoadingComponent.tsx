@@ -7,7 +7,7 @@ interface Props {
 
 export default function LoadingComponent({ text = 'Loading...' }: Props) {
   return (
-    <div className="d-flex flex-column min-vh-100 justify-content-center align-items-center text-center">
+    <div className="d-flex flex-column min-vh-100 justify-content-center align-items-center">
       <Spinner
         animation="border"
         variant="primary"
