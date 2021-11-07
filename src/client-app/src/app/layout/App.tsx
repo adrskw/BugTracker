@@ -7,6 +7,7 @@ import TicketDashboard from "../../features/tickets/dashboard/TicketDashboard";
 import { observer } from "mobx-react-lite";
 import HomePage from "../../features/home/HomePage";
 import { Route, Switch } from "react-router-dom";
+import TicketDetails from "../../features/tickets/details/TicketDetails";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
           <div className="ms-sm-auto col-sm-9 col-lg-10 px-4 py-2">
             <Route exact path="/" component={HomePage} />
             <Route exact path="/tickets" component={TicketDashboard} />
+              <Route exact path={["/tickets/:id", "/tickets/delete/:id"]} component={TicketDetails} />
           </div>
         </Row>
       </Container>
