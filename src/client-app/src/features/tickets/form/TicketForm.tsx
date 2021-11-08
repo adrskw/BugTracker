@@ -1,16 +1,21 @@
 import { observer } from 'mobx-react-lite';
-import React, { ChangeEvent, FormEvent, useState } from 'react';
+import React, { ChangeEvent, FormEvent, useEffect, useState } from 'react';
 import { Button, Col, FloatingLabel, Form, Row } from 'react-bootstrap';
+import { useHistory, useParams } from 'react-router';
 import LoadingButtonContentComponent from '../../../app/layout/loading/LoadingButtonContentComponent';
+import LoadingComponent from '../../../app/layout/loading/LoadingComponent';
 import { useStore } from '../../../app/stores/store';
+import { v4 as uuid } from "uuid";
 import { LinkContainer } from 'react-router-bootstrap';
 
-export default observer(function TicketForm() {
-  const { ticketStore } = useStore();
-  const { selectedTicket, closeTicketForm,
-    createTicket, updateTicket, isProcessingRequest } = ticketStore;
 
-  const initialState = selectedTicket ?? {
+export default observer(function TicketForm() {
+  const history = useHistory();
+  const { ticketStore } = useStore();
+  const { createTicket, updateTicket, isProcessingRequest, loadTicket, isLoading, setIsLoading } = ticketStore;
+  const { id } = useParams<{ id: string }>();
+
+  const [ticket, setTicket] = useState({
     id: '',
     title: '',
     description: '',
@@ -19,13 +24,31 @@ export default observer(function TicketForm() {
     priority: 0,
     status: 0,
     creationDate: new Date().toISOString() // TODO: Handle creationDate on the server side
-  };
+  });
 
-  const [ticket, setTicket] = useState(initialState);
+  useEffect(() => {
+    if (id) {
+      loadTicket(id).then(ticket => setTicket(ticket!));
+    }
+    else {
+      setIsLoading(false);
+    }
+  }, [id, loadTicket, setIsLoading]);
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    ticket.id ? updateTicket(ticket) : createTicket(ticket);
+
+    if (ticket.id.length === 0) {
+      let newTicket = {
+        ...ticket,
+        id: uuid()
+      }
+
+      createTicket(newTicket).then(() => history.push(`/tickets/${newTicket.id}`));
+    }
+    else {
+      updateTicket(ticket).then(() => history.push(`/tickets/${ticket.id}`));
+    }
   }
 
   function handleInputChange(event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
@@ -39,6 +62,8 @@ export default observer(function TicketForm() {
 
     setTicket({ ...ticket, [name]: value });
   }
+
+  if (isLoading) return <LoadingComponent />
 
   return (
     <div className="ticket-view-container">
