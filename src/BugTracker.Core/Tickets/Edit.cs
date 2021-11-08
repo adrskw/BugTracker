@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using BugTracker.Domain.Tickets;
 using BugTracker.Persistence;
+using FluentValidation;
 using MediatR;
 
 namespace BugTracker.Core.Tickets
@@ -15,6 +16,14 @@ namespace BugTracker.Core.Tickets
         }
 
         public class Handler : IRequestHandler<Command>
+        public class CommandValidator : AbstractValidator<Command>
+        {
+            public CommandValidator()
+            {
+                RuleFor(x => x.Ticket).SetValidator(new TicketValidator());
+            }
+        }
+
         {
             private readonly ApplicationDbContext context;
             private readonly IMapper mapper;

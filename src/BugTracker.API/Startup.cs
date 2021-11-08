@@ -7,6 +7,7 @@ using BugTracker.API.Middleware;
 using BugTracker.Core.Mapping;
 using BugTracker.Core.Tickets;
 using BugTracker.Persistence;
+using FluentValidation.AspNetCore;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -34,10 +35,16 @@ namespace BugTracker.API
         public void ConfigureServices(IServiceCollection services)
         {
 
-            services.AddControllers().AddJsonOptions(options =>
-            {
-                options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-            });
+            services.AddControllers()
+                    .AddJsonOptions(options =>
+                    {
+                        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+                    })
+                    .AddFluentValidation(config =>
+                    {
+                        config.RegisterValidatorsFromAssemblyContaining<Create>();
+                        config.RegisterValidatorsFromAssemblyContaining<Edit>();
+                    });
 
             services.AddSwaggerGen(c =>
             {
