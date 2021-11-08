@@ -1,13 +1,11 @@
 import { makeAutoObservable, runInAction } from "mobx";
 import agent from "../api/agent";
 import { Ticket } from "../models/ticket";
-import { v4 as uuid } from "uuid";
 
 export default class TicketStore {
   ticketRegistry = new Map<string, Ticket>();
   selectedTicket: Ticket | undefined;
   isEditMode = false;
-  isConfirmDeleteModalDisplayed = false;
   isLoading = true;
   isProcessingRequest = false;
 
@@ -31,28 +29,9 @@ export default class TicketStore {
     this.ticketRegistry = new Map(tickets.map(ticket => [ticket.id, ticket]));
   }
 
-  selectTicket = (id: string) => {
-    this.selectedTicket = this.ticketRegistry.get(id);
-  }
-
-  cancelSelectedTicket = () => {
-    this.selectedTicket = undefined;
-  }
-
-  openTicketForm = (id?: string) => {
-    id ? this.selectTicket(id) : this.cancelSelectedTicket();
-    this.isEditMode = true;
-  }
-
-  closeTicketForm = () => {
-    this.isEditMode = false;
-  }
-
-  toggleIsConfirmDeleteModalDisplayed = () => {
-    this.isConfirmDeleteModalDisplayed = !this.isConfirmDeleteModalDisplayed;
-  }
-
   loadTickets = async () => {
+    this.setIsLoading(true);
+
     try {
       await agent.Tickets.list().then(response => {
         this.setTickets(response);
@@ -88,7 +67,6 @@ export default class TicketStore {
 
   createTicket = async (ticket: Ticket) => {
     this.setIsProcessingRequest(true);
-    ticket.id = uuid();
 
     try {
       await agent.Tickets.create(ticket);
@@ -131,8 +109,6 @@ export default class TicketStore {
 
       runInAction(() => {
         this.ticketRegistry.delete(id);
-        this.cancelSelectedTicket();
-        this.toggleIsConfirmDeleteModalDisplayed();
       });
     } catch (error) {
       console.log(error);
