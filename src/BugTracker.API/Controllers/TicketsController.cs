@@ -13,22 +13,21 @@ namespace BugTracker.API.Controllers
     public class TicketsController : BaseApiController
     {
         [HttpGet]
-        public async Task<ActionResult<List<Ticket>>> GetTickets()
+        public async Task<IActionResult> GetTickets()
         {
-            return await Mediator.Send(new List.Query());
+            return HandleResult(await Mediator.Send(new List.Query()));
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Ticket>> GetTicket(Guid id)
+        public async Task<IActionResult> GetTicket(Guid id)
         {
-            // TODO: error handling: 'ticket not exists'
-            return await Mediator.Send(new Details.Query { Id = id });
+            return HandleResult(await Mediator.Send(new Details.Query { Id = id }));
         }
 
         [HttpPost]
         public async Task<IActionResult> CreateTicket(Ticket ticket)
         {
-            return Ok(await Mediator.Send(new Create.Command { Ticket = ticket }));
+            return HandleResult(await Mediator.Send(new Create.Command { Ticket = ticket }));
         }
 
         [HttpPut("{id}")]
@@ -36,13 +35,13 @@ namespace BugTracker.API.Controllers
         {
             ticket.Id = id;
 
-            return Ok(await Mediator.Send(new Edit.Command { Ticket = ticket }));
+            return HandleResult(await Mediator.Send(new Edit.Command { Ticket = ticket }));
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteTicket(Guid id)
         {
-            return Ok(await Mediator.Send(new Delete.Command { Id = id }));
+            return HandleResult(await Mediator.Send(new Delete.Command { Id = id }));
         }
     }
 }

@@ -1,6 +1,7 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using BugTracker.Core.CoreModels;
 using BugTracker.Persistence;
 using MediatR;
 
@@ -8,12 +9,12 @@ namespace BugTracker.Core.Tickets
 {
     public class Delete
     {
-        public class Command : IRequest
+        public class Command : IRequest<Result<Unit>>
         {
             public Guid Id { get; set; }
         }
 
-        public class Handler : IRequestHandler<Command>
+        public class Handler : IRequestHandler<Command, Result<Unit>>
         {
             private readonly ApplicationDbContext context;
 
@@ -22,15 +23,20 @@ namespace BugTracker.Core.Tickets
                 this.context = context;
             }
 
-            public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
+            public async Task<Result<Unit>> Handle(Command request, CancellationToken cancellationToken)
             {
                 var ticket = await context.Tickets.FindAsync(request.Id);
 
+                if (ticket == null)
+                    return null;
+
                 context.Remove(ticket);
+                bool isSuccess = await context.SaveChangesAsync() > 0;
 
-                await context.SaveChangesAsync();
+                if (!isSuccess)
+                    return Result<Unit>.Failure("Failed to delete the ticket");
 
-                return Unit.Value;
+                return Result<Unit>.Success(Unit.Value);
             }
         }
     }

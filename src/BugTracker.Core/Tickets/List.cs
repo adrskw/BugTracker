@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using BugTracker.Core.CoreModels;
 using BugTracker.Domain.Tickets;
 using BugTracker.Persistence;
 using MediatR;
@@ -10,9 +11,9 @@ namespace BugTracker.Core.Tickets
 {
     public class List
     {
-        public class Query : IRequest<List<Ticket>> { }
+        public class Query : IRequest<Result<List<Ticket>>> { }
 
-        public class Handler : IRequestHandler<Query, List<Ticket>>
+        public class Handler : IRequestHandler<Query, Result<List<Ticket>>>
         {
             private readonly ApplicationDbContext context;
 
@@ -21,9 +22,11 @@ namespace BugTracker.Core.Tickets
                 this.context = context;
             }
 
-            public async Task<List<Ticket>> Handle(Query request, CancellationToken cancellationToken)
+            public async Task<Result<List<Ticket>>> Handle(Query request, CancellationToken cancellationToken)
             {
-                return await context.Tickets.ToListAsync();
+                var tickets = await context.Tickets.ToListAsync();
+
+                return Result<List<Ticket>>.Success(tickets);
             }
         }
     }
