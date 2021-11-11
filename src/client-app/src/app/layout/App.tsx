@@ -1,5 +1,6 @@
 import React from "react";
 import "bootswatch/dist/zephyr/bootstrap.min.css";
+import 'react-toastify/dist/ReactToastify.css';
 import { Container, Row } from "react-bootstrap";
 import TopNavbar from "./TopNavbar";
 import Sidebar from "./Sidebar";
@@ -10,10 +11,12 @@ import { Route, Switch } from "react-router-dom";
 import TicketDetails from "../../features/tickets/details/TicketDetails";
 import ConfirmDeleteModal from "../../features/tickets/delete/ConfirmDeleteModal";
 import TicketForm from "../../features/tickets/form/TicketForm";
+import { ToastContainer } from "react-toastify";
 
 function App() {
   return (
     <>
+      <ToastContainer position='bottom-right' />
       <TopNavbar />
       <Container fluid>
         <Row >
