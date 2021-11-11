@@ -12,6 +12,8 @@ import TicketDetails from "../../features/tickets/details/TicketDetails";
 import ConfirmDeleteModal from "../../features/tickets/delete/ConfirmDeleteModal";
 import TicketForm from "../../features/tickets/form/TicketForm";
 import { ToastContainer } from "react-toastify";
+import NotFound from "../../features/errors/NotFound";
+import ServerError from "../../features/errors/ServerError";
 
 function App() {
   return (
@@ -36,6 +38,8 @@ function App() {
                   </>
                 )}
               />
+              <Route exact path="/serverError" component={ServerError} />
+              <Route component={NotFound} />
             </Switch>
           </div>
         </Row>
