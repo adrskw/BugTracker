@@ -1,21 +1,29 @@
 import { observer } from 'mobx-react-lite';
-import React, { ChangeEvent, FormEvent, useEffect, useState } from 'react';
-import { Button, Col, FloatingLabel, Form, Row } from 'react-bootstrap';
+import React, { useEffect, useState } from 'react';
+import { Button, Col, Row } from 'react-bootstrap';
 import { useHistory, useParams } from 'react-router';
 import LoadingButtonContentComponent from '../../../app/layout/loading/LoadingButtonContentComponent';
 import LoadingComponent from '../../../app/layout/loading/LoadingComponent';
 import { useStore } from '../../../app/stores/store';
 import { v4 as uuid } from "uuid";
 import { LinkContainer } from 'react-router-bootstrap';
+import { Formik, Form } from 'formik';
+import * as Yup from 'yup';
+import FloatingLabelTextInput from '../../../app/common/form/FloatingLabelTextInput';
+import { ticketPriorityOptions } from '../../../app/common/options/ticketPriorityOptions';
+import FloatingLabelSelectInput from '../../../app/common/form/FloatingLabelSelectInput';
+import { ticketStatusOptions } from '../../../app/common/options/ticketStatusOptions';
+import FloatingLabelTextArea from '../../../app/common/form/FloatingLabelTextArea';
+import { Ticket } from '../../../app/models/ticket';
 
 
 export default observer(function TicketForm() {
   const history = useHistory();
   const { ticketStore } = useStore();
-  const { createTicket, updateTicket, isProcessingRequest, loadTicket, isLoading, setIsLoading } = ticketStore;
+  const { createTicket, updateTicket, loadTicket, isLoading, setIsLoading } = ticketStore;
   const { id } = useParams<{ id: string }>();
 
-  const [ticket, setTicket] = useState({
+  const [ticket, setTicket] = useState<Ticket>({
     id: '',
     title: '',
     description: '',
@@ -24,6 +32,14 @@ export default observer(function TicketForm() {
     priority: 0,
     status: 0,
     creationDate: new Date().toISOString() // TODO: Handle creationDate on the server side
+  });
+
+  const validationSchema = Yup.object({
+    title: Yup.string().required('Title is required'),
+    reporter: Yup.string().required('Reporter is required'),
+    assignee: Yup.string().required('Assignee is required'),
+    priority: Yup.string().required('Priority is required'),
+    status: Yup.string().required('Status is required'),
   });
 
   useEffect(() => {
@@ -35,9 +51,7 @@ export default observer(function TicketForm() {
     }
   }, [id, loadTicket, setIsLoading]);
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-
+  function handleFormSubmit(ticket: Ticket) {
     if (ticket.id.length === 0) {
       let newTicket = {
         ...ticket,
@@ -51,18 +65,6 @@ export default observer(function TicketForm() {
     }
   }
 
-  function handleInputChange(event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
-    const { name, value } = event.target;
-
-    setTicket({ ...ticket, [name]: value });
-  }
-
-  function handleSelectChange(event: ChangeEvent<HTMLSelectElement>) {
-    const { name, value } = event.target;
-
-    setTicket({ ...ticket, [name]: value });
-  }
-
   if (isLoading) return <LoadingComponent />
 
   return (
@@ -70,60 +72,50 @@ export default observer(function TicketForm() {
       <div className="d-flex justify-content-between align-items-center mb-2">
         <p className="h3">{ticket.id ? "Edit Ticket" : "Create Ticket"}</p>
       </div>
-      <Form onSubmit={handleSubmit}>
-        <Row className="g-3">
-          <Col xs={12}>
-            <FloatingLabel controlId="title" label="Title">
-              <Form.Control type="text" placeholder="title" name="title" value={ticket.title} onChange={handleInputChange} />
-            </FloatingLabel>
-          </Col>
-          <Col md={6}>
-            <FloatingLabel controlId="reporter" label="Reporter">
-              <Form.Control type="text" placeholder="reporter" name="reporter" value={ticket.reporter} onChange={handleInputChange} />
-            </FloatingLabel>
-          </Col>
-          <Col md={6}>
-            <FloatingLabel controlId="assignee" label="Assignee">
-              <Form.Control type="text" placeholder="assignee" name="assignee" value={ticket.assignee} onChange={handleInputChange} />
-            </FloatingLabel>
-          </Col>
-          <Col md={6}>
-            <FloatingLabel controlId="priority" label="Priority">
-              <Form.Select aria-label="priority" name="priority" onChange={handleSelectChange}>
-                <option>choose priority</option>
-                <option value="1">One</option>
-                <option value="2">Two</option>
-                <option value="3">Three</option>
-              </Form.Select>
-            </FloatingLabel>
-          </Col>
-          <Col md={6}>
-            <FloatingLabel controlId="status" label="Status">
-              <Form.Select aria-label="status" name="status" onChange={handleSelectChange}>
-                <option>choose status</option>
-                <option value="1">One</option>
-                <option value="2">Two</option>
-                <option value="3">Three</option>
-              </Form.Select>
-            </FloatingLabel>
-          </Col>
-          <Col xs={12}>
-            <FloatingLabel controlId="description" label="Description">
-              <Form.Control as="textarea" placeholder="describe the issue here" name="description" value={ticket.description} onChange={handleInputChange} />
-            </FloatingLabel>
-          </Col>
-          <Col xs={12}>
-            <LinkContainer exact to="/tickets">
-              <Button variant="outline-secondary me-1">
-                Cancel
-              </Button>
-            </LinkContainer>
-            <Button variant="primary" type="submit" disabled={isProcessingRequest}>
-              {(isProcessingRequest) ? <LoadingButtonContentComponent /> : 'Submit'}
-            </Button>
-          </Col>
-        </Row>
-      </Form>
-    </div >
+
+      <Formik initialValues={ticket}
+        validationSchema={validationSchema}
+        onSubmit={values => handleFormSubmit(values)}
+        enableReinitialize>
+        {({ handleSubmit, isValid, isSubmitting, dirty }) => (
+          <Form onSubmit={handleSubmit}>
+            <Row className="g-3">
+              <Col xs={12}>
+                <FloatingLabelTextInput label="Title" name="title" placeholder="title" />
+              </Col>
+              <Col md={6}>
+                <FloatingLabelTextInput label="Reporter" name="reporter" placeholder="reporter" />
+              </Col>
+              <Col md={6}>
+                <FloatingLabelTextInput label="Assignee" name="assignee" placeholder="assignee" />
+              </Col>
+              <Col md={6}>
+                <FloatingLabelSelectInput label="Priority" name="priority" placeholder="priority" options={ticketPriorityOptions} />
+              </Col>
+              <Col md={6}>
+                <FloatingLabelSelectInput label="Status" name="status" placeholder="status" options={ticketStatusOptions} />
+              </Col>
+              <Col xs={12}>
+                <FloatingLabelTextArea label="Description" name="description" placeholder="describe the issue here" />
+              </Col>
+              <Col xs={12}>
+                <LinkContainer exact to="/tickets">
+                  <Button variant="outline-secondary me-1">
+                    Cancel
+                  </Button>
+                </LinkContainer>
+                <Button
+                  variant="primary"
+                  type="submit"
+                  disabled={isSubmitting || !isValid || !dirty}>
+                  {(isSubmitting) ? <LoadingButtonContentComponent /> : 'Submit'}
+                </Button>
+              </Col>
+            </Row>
+          </Form>
+        )}
+      </Formik>
+    </div>
   );
 });
+
