@@ -5,7 +5,6 @@ import { Ticket } from "../models/ticket";
 export default class TicketStore {
   ticketRegistry = new Map<string, Ticket>();
   selectedTicket: Ticket | undefined;
-  isEditMode = false;
   isLoading = true;
   isProcessingRequest = false;
 
@@ -29,6 +28,10 @@ export default class TicketStore {
     this.ticketRegistry = new Map(tickets.map(ticket => [ticket.id, ticket]));
   }
 
+  selectTicket = (ticket: Ticket) => {
+    this.selectedTicket = ticket;
+  }
+
   loadTickets = async () => {
     this.setIsLoading(true);
 
@@ -47,14 +50,14 @@ export default class TicketStore {
     let ticket = this.getTicketFromMemory(id);
 
     if (ticket) {
-      this.selectedTicket = ticket;
+      this.selectTicket(ticket);
     }
     else {
       this.setIsLoading(true);
 
       try {
         ticket = await agent.Tickets.details(id);
-        this.selectedTicket = ticket;
+        this.selectTicket(ticket);
       } catch (error) {
         console.log(error);
       } finally {
@@ -66,38 +69,28 @@ export default class TicketStore {
   }
 
   createTicket = async (ticket: Ticket) => {
-    this.setIsProcessingRequest(true);
-
     try {
       await agent.Tickets.create(ticket);
 
       runInAction(() => {
         this.ticketRegistry.set(ticket.id, ticket);
-        this.selectedTicket = ticket;
-        this.isEditMode = false;
+        this.selectTicket(ticket);
       });
     } catch (error) {
       console.log(error);
-    } finally {
-      this.setIsProcessingRequest(false);
     }
   }
 
   updateTicket = async (ticket: Ticket) => {
-    this.setIsProcessingRequest(true);
-
     try {
       await agent.Tickets.update(ticket);
 
       runInAction(() => {
         this.ticketRegistry.set(ticket.id, ticket);
-        this.selectedTicket = ticket;
-        this.isEditMode = false;
+        this.selectTicket(ticket);
       });
     } catch (error) {
       console.log(error);
-    } finally {
-      this.setIsProcessingRequest(false);
     }
   }
 
