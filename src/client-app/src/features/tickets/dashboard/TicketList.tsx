@@ -1,6 +1,5 @@
 import React from 'react';
 import { ListGroup } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
 import { useStore } from '../../../app/stores/store';
 import TicketListItem from './TicketListItem';
 
