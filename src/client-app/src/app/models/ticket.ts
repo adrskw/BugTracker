@@ -4,7 +4,7 @@ export interface Ticket {
   description: string;
   reporter: string;
   assignee: string;
-  priority: number;
-  status: number;
+  priority: string;
+  status: string;
   creationDate: string;
 }

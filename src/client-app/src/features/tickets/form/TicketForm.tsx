@@ -29,8 +29,8 @@ export default observer(function TicketForm() {
     description: '',
     reporter: '',
     assignee: '',
-    priority: 0,
-    status: 0,
+    priority: '',
+    status: '',
     creationDate: new Date().toISOString() // TODO: Handle creationDate on the server side
   });
 
