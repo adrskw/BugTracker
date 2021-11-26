@@ -4,11 +4,13 @@ using System.Linq;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using BugTracker.API.Middleware;
+using BugTracker.API.Services;
 using BugTracker.Core.Mapping;
 using BugTracker.Core.Tickets;
 using BugTracker.Persistence;
 using FluentValidation.AspNetCore;
 using MediatR;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -18,6 +20,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
 namespace BugTracker.API
@@ -53,6 +56,22 @@ namespace BugTracker.API
 
             services.AddDbContextPool<ApplicationDbContext>(
                 options => options.UseSqlite(Configuration.GetConnectionString("BugTrackerDbConnection")));
+
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["TokenKey"]));
+
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                    .AddJwtBearer(options =>
+                    {
+                        options.TokenValidationParameters = new TokenValidationParameters
+                        {
+                            ValidateIssuerSigningKey = true,
+                            IssuerSigningKey = key,
+                            ValidateIssuer = false,
+                            ValidateAudience = false
+                        };
+                    });
+
+            services.AddScoped<ITokenService, TokenService>();
 
             services.AddCors(options =>
             {
