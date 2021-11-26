@@ -1,9 +1,11 @@
+using BugTracker.Domain;
 using BugTracker.Domain.Tickets;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace BugTracker.Persistence
 {
-    public class ApplicationDbContext : DbContext
+    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         public DbSet<Ticket> Tickets { get; set; }
 
