@@ -34,6 +34,7 @@ namespace BugTracker.API.Controllers
             this.logger = logger;
         }
 
+        [AllowAnonymous]
         [HttpPost("login")]
         public async Task<ActionResult<UserDto>> Login(LoginDto loginDto)
         {

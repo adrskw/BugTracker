@@ -43,16 +43,21 @@ namespace BugTracker.API
         public void ConfigureServices(IServiceCollection services)
         {
 
-            services.AddControllers()
-                    .AddJsonOptions(options =>
-                    {
-                        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-                    })
-                    .AddFluentValidation(config =>
-                    {
-                        config.RegisterValidatorsFromAssemblyContaining<Create>();
-                        config.RegisterValidatorsFromAssemblyContaining<Edit>();
-                    });
+            services.AddControllers(options =>
+            {
+                var policy = new AuthorizationPolicyBuilder()
+                                .RequireAuthenticatedUser().Build();
+
+                options.Filters.Add(new AuthorizeFilter(policy));
+            })
+            .AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+            })
+            .AddFluentValidation(config =>
+            {
+                config.RegisterValidatorsFromAssemblyContaining<Create>();
+            });
 
             services.AddSwaggerGen(c =>
             {
@@ -116,6 +121,7 @@ namespace BugTracker.API
 
             app.UseCors("CorsPolicy");
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
