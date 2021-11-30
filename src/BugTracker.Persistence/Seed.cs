@@ -2,14 +2,30 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BugTracker.Domain;
 using BugTracker.Domain.Tickets;
+using Microsoft.AspNetCore.Identity;
 
 namespace BugTracker.Persistence
 {
     public class Seed
     {
-        public static async Task SeedData(ApplicationDbContext context)
+        public static async Task SeedData(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
+            if (!userManager.Users.Any())
+            {
+                var users = new List<ApplicationUser>
+                {
+                    new ApplicationUser { UserName = "admin", Email = "admin@admin.com", FirstName = "John", LastName = "Smith" },
+                    new ApplicationUser { UserName = "testuser", Email = "testuser@user.com", FirstName = "Patrick", LastName = "Mendes" }
+                };
+
+                foreach (var user in users)
+                {
+                    await userManager.CreateAsync(user, "defaultpassword");
+                }
+            }
+
             if (context.Tickets.Any())
                 return;
 
