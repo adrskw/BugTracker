@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "bootswatch/dist/zephyr/bootstrap.min.css";
 import 'react-toastify/dist/ReactToastify.css';
 import { Container, Row } from "react-bootstrap";
@@ -15,8 +15,23 @@ import { ToastContainer } from "react-toastify";
 import NotFound from "../../features/errors/NotFound";
 import ServerError from "../../features/errors/ServerError";
 import LoginForm from "../../features/users/LoginForm";
+import { useStore } from "../stores/store";
+import LoadingComponent from "./loading/LoadingComponent";
 
 function App() {
+  const { commonStore, userStore } = useStore();
+
+  useEffect(() => {
+    if (commonStore.token) {
+      userStore.getUser().finally(() => commonStore.setIsAppLoaded());
+    }
+    else {
+      commonStore.setIsAppLoaded();
+    }
+  }, [commonStore, userStore]);
+
+  if (!commonStore.isAppLoaded) return <LoadingComponent />
+
   return (
     <>
       <ToastContainer position='bottom-right' />
