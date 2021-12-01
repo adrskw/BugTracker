@@ -5,7 +5,11 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  font-size: .875rem;
+  font-size: 0.875rem;
+}
+
+a {
+  text-decoration: none !important;
 }
 
 code {
@@ -24,27 +28,26 @@ code {
   left: 0;
   z-index: 100; /* Behind the navbar */
   padding: 60px 0 0; /* Height of navbar */
-  box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
+  box-shadow: inset -1px 0 0 rgba(0, 0, 0, 0.1);
 }
 
 @media (max-width: 576px) {
   .sidebar {
     position: relative;
     padding: 0.85rem 0;
-    box-shadow: inset 0 -1px 0 rgba(0, 0, 0, .1);
+    box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.1);
     padding-left: 10px;
   }
 
   .sidebar .nav-link {
-    padding-right: .75rem;
-    padding-left: .75rem;
+    padding-right: 0.75rem;
+    padding-left: 0.75rem;
   }
 }
 
 .sidebar .nav-link {
   font-weight: 500;
   color: #333;
-
 }
 
 .sidebar .nav-link .nav-icon {
@@ -67,7 +70,7 @@ code {
 }
 
 .sidebar-heading {
-  font-size: .75rem;
+  font-size: 0.75rem;
   text-transform: uppercase;
 }
 
@@ -85,20 +88,20 @@ code {
  */
 
 .navbar-brand {
-  padding-top: .75rem;
-  padding-bottom: .75rem;
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
   font-size: 1rem;
-  background-color: rgba(0, 0, 0, .25);
-  box-shadow: inset -1px 0 0 rgba(0, 0, 0, .25);
+  background-color: rgba(0, 0, 0, 0.25);
+  box-shadow: inset -1px 0 0 rgba(0, 0, 0, 0.25);
 }
 
 .navbar .navbar-toggler {
-  top: .25rem;
+  top: 0.25rem;
   right: 1rem;
 }
 
 .navbar .form-control {
-  padding: .75rem 1rem;
+  padding: 0.75rem 1rem;
   border-width: 0;
   border-radius: 0;
 }
@@ -113,13 +116,13 @@ code {
 
 .form-control-dark {
   color: #fff;
-  background-color: rgba(255, 255, 255, .1);
-  border-color: rgba(255, 255, 255, .1);
+  background-color: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.1);
 }
 
 .form-control-dark:focus {
   border-color: transparent;
-  box-shadow: 0 0 0 3px rgba(255, 255, 255, .25);
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.25);
 }
 
 /*
@@ -133,7 +136,7 @@ code {
 }
 
 .ticket-view-container > dl dd {
-  margin-bottom: .25rem;
+  margin-bottom: 0.25rem;
 }
 
 .ticket-view-container .title-icon {
@@ -155,7 +158,14 @@ code {
 /*
  * Other styles
  */
- 
+.login-view {
+  width: 350px !important;
+}
+
+.logo-icon {
+  transform: rotate(-45deg);
+}
+
 .nav-icon {
   width: 16px;
   height: 16px;
